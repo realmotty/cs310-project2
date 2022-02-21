@@ -38,20 +38,20 @@ public class Database {
                 pstSelect.setString(1, subjectid);
                 pstSelect.setString(2, num);
 
-                /* Execute Select Query */
+                // Executes Select Query //
                 hasresults = pstSelect.execute();
 
-                /* Check for Results */
+                // Checks for Results //
                 if (hasresults) {
 
-                    /* Get Results set */
+                    // Gets Results set //
                     resultset = pstSelect.getResultSet();
 
-                    /* Encode to JSON */
+                    // Encodes to JSON //
                     result = getResultSetAsJSON(resultset);
 
                 }
-                /* If no data available, print error */
+                // If no data is returned, prints error //
                 else {
                     System.err.println("Error: No data returned!");
                 }
@@ -76,16 +76,16 @@ public class Database {
 
             if (isConnected()) {
 
-                /* Prepare Insert Query */
+                // Prepares Insert Query //
                 query = "INSERT INTO jsu_sp22_v1.registration VALUES (?,?,?)";
                 pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 pstUpdate.setInt(1, studentid);
                 pstUpdate.setInt(2, termid);
                 pstUpdate.setInt(3, crn);
 
-                /* Execute Insert Query */
+                // Executes Insert Query //
                 updateCount = pstUpdate.executeUpdate();
-                /* update results to show amount of records effected */
+               // Updates Results //
                 if (updateCount > 0) {
                     result = updateCount;
                 }
@@ -110,16 +110,16 @@ public class Database {
 
             if (isConnected()) {
 
-                /* Prepare Insert Query */
+                // Prepares Insert Query //
                 query = "DELETE FROM jsu_sp22_v1.registration  WHERE studentid = ? AND termid = ? AND crn = ?";
                 pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 pstUpdate.setInt(1, studentid);
                 pstUpdate.setInt(2, termid);
                 pstUpdate.setInt(3, crn);
 
-                /* Execute Insert Query */
+                // Executes Insert Query //
                 updateCount = pstUpdate.executeUpdate();
-                /* update results to show amount of records effected */
+                // Updates Results //
                 if (updateCount > 0) {
                     result = updateCount;
                 }
@@ -143,15 +143,15 @@ public class Database {
 
             if (isConnected()) {
 
-                /* Prepare Insert Query */
+               // Prepares Insert Query //
                 query = "DELETE FROM jsu_sp22_v1.registration  WHERE studentid = ? AND termid = ? ";
                 pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 pstUpdate.setInt(1, studentid);
                 pstUpdate.setInt(2, termid);
 
-                /* Execute Insert Query */
+                // Executes Insert Query //
                 updateCount = pstUpdate.executeUpdate();
-                /* update results to show amount of records effected */
+                // Updates Results //
                 if (updateCount > 0) {
                     result = updateCount;
                 }

@@ -22,10 +22,44 @@ public class Database {
 
     public String getSectionsAsJSON(int termid, String subjectid, String num) {
         
-        String result = null;
+       String result = null, query;
         
         // INSERT YOUR CODE HERE
-        
+        ResultSet resultset = null;
+        boolean hasresults;
+        PreparedStatement pstSelect = null;
+
+        try {
+            if (isConnected()) {
+
+                /* Prepare Select Query */
+                query = "SELECT * FROM jsu_sp22_v1.section s WHERE subjectid = ? AND num = ?";
+                pstSelect = connection.prepareStatement(query);
+                pstSelect.setString(1, subjectid);
+                pstSelect.setString(2, num);
+
+                /* Execute Select Query */
+                hasresults = pstSelect.execute();
+
+                /* Check for Results */
+                if (hasresults) {
+
+                    /* Get Results set */
+                    resultset = pstSelect.getResultSet();
+
+                    /* Encode to JSON */
+                    result = getResultSetAsJSON(resultset);
+
+                }
+                /* If no data available, print error */
+                else {
+                    System.err.println("Error: No data returned!");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
         
     }
@@ -35,7 +69,30 @@ public class Database {
         int result = 0;
         
         // INSERT YOUR CODE HERE
-        
+        int updateCount;
+        String query;
+        PreparedStatement pstUpdate = null;
+        try {
+
+            if (isConnected()) {
+
+                /* Prepare Insert Query */
+                query = "INSERT INTO jsu_sp22_v1.registration VALUES (?,?,?)";
+                pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                pstUpdate.setInt(1, studentid);
+                pstUpdate.setInt(2, termid);
+                pstUpdate.setInt(3, crn);
+
+                /* Execute Insert Query */
+                updateCount = pstUpdate.executeUpdate();
+                /* update results to show amount of records effected */
+                if (updateCount > 0) {
+                    result = updateCount;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
         
     }
@@ -46,6 +103,30 @@ public class Database {
         
         // INSERT YOUR CODE HERE
         
+        int updateCount;
+        String query;
+        PreparedStatement pstUpdate = null;
+        try {
+
+            if (isConnected()) {
+
+                /* Prepare Insert Query */
+                query = "DELETE FROM jsu_sp22_v1.registration  WHERE studentid = ? AND termid = ? AND crn = ?";
+                pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                pstUpdate.setInt(1, studentid);
+                pstUpdate.setInt(2, termid);
+                pstUpdate.setInt(3, crn);
+
+                /* Execute Insert Query */
+                updateCount = pstUpdate.executeUpdate();
+                /* update results to show amount of records effected */
+                if (updateCount > 0) {
+                    result = updateCount;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
         
     }
@@ -55,17 +136,74 @@ public class Database {
         int result = 0;
         
         // INSERT YOUR CODE HERE
-        
+        int updateCount;
+        String query;
+        PreparedStatement pstUpdate = null;
+        try {
+
+            if (isConnected()) {
+
+                /* Prepare Insert Query */
+                query = "DELETE FROM jsu_sp22_v1.registration  WHERE studentid = ? AND termid = ? ";
+                pstUpdate = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                pstUpdate.setInt(1, studentid);
+                pstUpdate.setInt(2, termid);
+
+                /* Execute Insert Query */
+                updateCount = pstUpdate.executeUpdate();
+                /* update results to show amount of records effected */
+                if (updateCount > 0) {
+                    result = updateCount;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return result;
         
     }
     
     public String getScheduleAsJSON(int studentid, int termid) {
         
-        String result = null;
+        String result = null, query;
         
         // INSERT YOUR CODE HERE
-        
+        ResultSet resultset = null;
+        boolean hasresults;
+        PreparedStatement pstSelect = null;
+
+        try {
+            if (isConnected()) {
+
+                // Prepares the Select Query //
+                query = "SELECT * FROM jsu_sp22_v1.registration r JOIN jsu_sp22_v1.section ON r.crn = jsu_sp22_v1.section.crn AND r.studentid = ? AND r.termid = ?";
+                pstSelect = connection.prepareStatement(query);
+                pstSelect.setInt(1, studentid);
+                pstSelect.setInt(2, termid);
+
+                // Executes the Select Query //
+                hasresults = pstSelect.execute();
+
+                // Checks for Results //
+                if (hasresults) {
+
+                    // Gets the Results set //
+                    resultset = pstSelect.getResultSet();
+
+                    // Encodes to JSON //
+                    result = getResultSetAsJSON(resultset);
+
+                }
+                // Prints error if theres no data returned //
+                else {
+                    System.err.println("Error: No data returned!");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
         
     }
